@@ -24,4 +24,5 @@ Route::delete('exclusion',[RecordController::class,'deleteItemsSelected'])->name
 Route::get('search/{process}/{product?}', [RecordController::class,'filter'])->name('control.batch.filters'); 
 Route::get('search', [RecordController::class,'search'])->name('control.batch.search'); 
 Route::get('print',[RecordController::class,'print'])->name('control.batch.print');
+Route::get('print-expedition',[RecordController::class,'printExpedition'])->name('control.batch.print.expedition');
 Route::resource('registros', RecordController::class)->parameter('registros','record')->names('control.batch');

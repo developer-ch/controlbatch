@@ -9,10 +9,9 @@ class RecordController extends Controller
 {
     public function index()
     {
-        $isFilter = false;
         $records = Record::limit(0)->whereExpeditionOrExpedition(null, '')->orderByDesc('id')->get();
-        $valuesExpedition = Record::where('expedition','<>','')->distinct()->get('expedition');
-        return view('records.index', compact('records', 'isFilter','valuesExpedition'));
+        $valuesExpedition = Record::listExpedition();
+        return view('records.index', compact('records','valuesExpedition'));
     }
 
     public function filter($process, $product = null)
@@ -51,8 +50,10 @@ class RecordController extends Controller
         $seachProcess = $request->process;
         $seachProduct = $request->product_code;
         $searchExpedition = $request->search_expedition??'';
-
-        return view('records.index', compact('records', 'isFilter','searchExpedition', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product'));
+        $valuesExpedition = Record::listExpedition();
+        if($searchExpedition == '')
+            return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product','valuesExpedition'));
+        return view('records.index', compact('records', 'isFilter','searchExpedition', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product','valuesExpedition'));
     }
 
     public function moveSelectedToTarget(Request $request)

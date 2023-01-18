@@ -55,7 +55,7 @@ class Record extends Model
     public function netWeight(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => str_replace(',','.',$value)
+            set: fn ($value) => str_replace(',', '.', $value)
         );
     }
 
@@ -65,5 +65,10 @@ class Record extends Model
             get: fn ($value) => strtoupper($value),
             set: fn ($value) => $value
         );
+    }
+
+    public static function listExpedition()
+    {
+        return self::where('expedition','<>','')->distinct()->get('expedition');
     }
 }

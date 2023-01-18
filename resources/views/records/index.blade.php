@@ -5,52 +5,79 @@
     <hr />
 @endsection
 @section('actions')
-    <form action="{{ route('control.batch.search') }}" method="GET">
-        <div class="row">
-            <div class="input-field col s12 m12">
-                <select name="search_expedition">
-                    <option value="" selected>PENDENTES DE EXPEDIÇÃO</option>
-                    @isset($valuesExpedition)
-                        @foreach ($valuesExpedition as $value)
-                            <option value="{{$value->expedition}}">{{$value->expedition}}</option>
-                        @endforeach
-                    @endisset
-                </select>
-            </div>
-            <div class="input-field col s12 m5">
-                <div class="input-field col s12 m9">
-                    <i class="material-icons prefix">description</i>
-                    <input minlength="5" id="icon_prefix" type="text" name="process" value="{{ $seachProcess ?? '' }}">
-                    <label for="icon_prefix">PROCESSO</label>
-                </div>
-                <div class="input-field col s12 m3">
-                    <select name="type_search_process">
-                        <option value="=" selected>IGUAL</option>
-                        <option value="like" @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>CONTENHA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="input-field col s12 m5">
-                <div class="input-field col s12 m9">
-                    <i class="material-icons prefix">description</i>
-                    <input minlength="2" id="icon_prefix" type="text" name="product_code"
-                        value="{{ $seachProduct ?? '' }}">
-                    <label for="icon_prefix">PRODUTO-CODE</label>
-                </div>
-                <div class="input-field col s12 m3">
-                    <select name="type_search_product" required>
-                        <option value="like" selected>CONTENHA</option>
-                        <option value="=" @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>IGUAL</option>
-                    </select>
-                </div>
-            </div>
-            <div class="input-field col s12 m2">
-                <button class="btn-floating waves-effect waves-light" type="submit">
-                    <i class="material-icons left">search</i>
-                </button>
-            </div>
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab  @isset($searchExpedition) disabled @endisset col s3"><a
+                        {{ $searchExpedition ?? "class='active'" }} href="#pending">PENDENTES DE EXPEDIÇÃO</a></li>
+                <li class="tab col @isset($isFilter) disabled @endisset s3"><a
+                        @isset($searchExpedition)class="active"@endisset href="#expedition">EXPEDIDAS</a></li>
+            </ul>
         </div>
-    </form>
+        <div id="pending" class="col s12">
+            <form action="{{ route('control.batch.search') }}" method="GET">
+                <div class="row">
+                    <div class="input-field col s12 m5">
+                        <div class="input-field col s12 m9">
+                            <i class="material-icons prefix">description</i>
+                            <input minlength="5" id="icon_prefix" type="text" name="process"
+                                value="{{ $seachProcess ?? '' }}" required>
+                            <label for="icon_prefix">PROCESSO</label>
+                        </div>
+                        <div class="input-field col s12 m3">
+                            <select name="type_search_process">
+                                <option value="=" selected>IGUAL</option>
+                                <option value="like"
+                                    @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>CONTENHA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field col s12 m5">
+                        <div class="input-field col s12 m9">
+                            <i class="material-icons prefix">description</i>
+                            <input minlength="2" id="icon_prefix" type="text" name="product_code"
+                                value="{{ $seachProduct ?? '' }}">
+                            <label for="icon_prefix">PRODUTO-CODE</label>
+                        </div>
+                        <div class="input-field col s12 m3">
+                            <select name="type_search_product" required>
+                                <option value="like" selected>CONTENHA</option>
+                                <option value="="
+                                    @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>
+                                    IGUAL</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field col s12 m2">
+                        <button class="btn-floating waves-effect waves-light" type="submit">
+                            <i class="material-icons left">search</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="expedition" class="col s12">
+            <form action="{{ route('control.batch.search') }}" method="GET">
+                <div class="row">
+                    <div class="input-field col s12 m7">
+                        <select name="search_expedition">
+                            @isset($valuesExpedition)
+                                @foreach ($valuesExpedition as $value)
+                                    <option value="{{ $value->expedition }}"
+                                        @isset($searchExpedition){{ $searchExpedition == $value->expedition ? 'selected' : '' }}@endisset>{{ $value->expedition }}</option>
+                                @endforeach
+                            @endisset
+                        </select>
+                    </div>
+                    <div class="input-field col s12 m5">
+                        <button class="btn-floating waves-effect waves-light" type="submit">
+                            <i class="material-icons left">search</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 @include('records.modals.create')
 
@@ -63,31 +90,46 @@
                 <div class="col s12">
                     <div class="col s12 m6">
                         @if ($records->count() == 0)
-                            <label><input type="checkbox" id="select-all" class="filled-in"
-                                    disabled='disabled'><span></span></label>
+                            <label><input type="checkbox" id="select-all" class="filled-in" disabled><span></span></label>
                         @else
-                            <label><input type="checkbox" id="select-all" class="filled-in"><span>MARCAR
-                                    {{ $records->count() }}
-                                    REGISTRO(S)</span></label>
+                            @isset($searchExpedition)
+                            @else
+                                <label><input type="checkbox" id="select-all" class="filled-in"><span>MARCAR
+                                        {{ $records->count() }}
+                                        REGISTRO(S)</span></label>
+                            @endisset
                         @endif
                     </div>
                     <div class="col s12 m6 right">
-                        <a href="#confirmeDelete" id='btn-delete-selected'
-                            class="btn-floating right red tooltipped modal-trigger"
-                            data-tooltip='CLICK: Excluir registro(s) selecionado(s)' data-position="bottom">
-                            <i class="material-icons">delete</i>
-                        </a>
-                        <button id='btn-print-selected' class="btn-floating right black waves-effect waves-light tooltipped Large" data-tooltip='CLICK: Imprimir registro(s) selecionado(s)' formaction="{{ route('control.batch.print') }}"
-                            name="_method" value="GET" type="submit"><i class="material-icons left">print</i>
-                        </button>
-                        <a href="#create" class="btn-floating right green tooltipped modal-trigger"
-                            data-tooltip='CLICK: Cadastrar um novo registro.' data-position="bottom">
-                            <i class="material-icons">add</i>
-                        </a>
+                        @isset($searchExpedition)
+                            <button class="btn-floating right black waves-effect waves-light tooltipped Large"
+                                data-tooltip='CLICK: Imprimir registro(s) selecionado(s)'
+                                formaction="{{ route('control.batch.print.expedition') }}" name="_method" value="GET"
+                                type="submit"><i class="material-icons left">print</i>
+                            </button>
+                        @else
+                            <a href="#confirmeDelete" id='btn-delete-selected'
+                                class="btn-floating right red tooltipped modal-trigger"
+                                data-tooltip='CLICK: Excluir registro(s) selecionado(s)' data-position="bottom"
+                                @isset($searchExpedition) disabled @endisset>
+                                <i class="material-icons">delete</i>
+                            </a>
+                            <a href="#create" class="btn-floating right green tooltipped modal-trigger"
+                                data-tooltip='CLICK: Cadastrar um novo registro.' data-position="bottom"
+                                @isset($searchExpedition) disabled @endisset>
+                                <i class="material-icons">add</i>
+                            </a>
+                            <button id='btn-print-selected'
+                                class="btn-floating right black waves-effect waves-light tooltipped Large"
+                                data-tooltip='CLICK: Imprimir registro(s) selecionado(s)'
+                                formaction="{{ route('control.batch.print') }}" name="_method" value="GET" type="submit"><i
+                                    class="material-icons left">print</i>
+                            </button>
+                        @endisset
                         @isset($isFilter)
                             @if ($isFilter)
-                                <a id='btn-cler-filters' href={{ route('control.batch.index') }} class="btn right yellow tooltipped"
-                                    data-tooltip='CLICK: REMOVER FILTRO(S)' data-position="top">
+                                <a id='btn-cler-filters' href={{ route('control.batch.index') }}
+                                    class="btn right yellow tooltipped" data-tooltip='CLICK: REMOVER FILTRO(S)' data-position="top">
                                     <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge"
                                         data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
                             @endif
@@ -116,7 +158,7 @@
                                         <label>
                                             <input id="{{ $record->id }}" type="checkbox" class="filled-in"
                                                 name="items_selected[]" value="{{ $record->id }}"
-                                                onchange="hideActions(true)" /><span>{{ $record->id }}</span>
+                                                @isset($searchExpedition) checked @else onchange="hideActions(true)" @endisset /><span>{{ $record->id }}</span>
                                         </label>
                                     </td>
                                     <td class="address">{{ $record->address }}</td>
