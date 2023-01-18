@@ -55,8 +55,7 @@ class Record extends Model
     public function netWeight(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => str_replace(',','.',$value)/*,
-            get: fn ($value) => number_format($value,3,',','.')*/
+            set: fn ($value) => str_replace(',','.',$value)
         );
     }
 

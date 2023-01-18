@@ -7,19 +7,26 @@
 @section('actions')
     <form action="{{ route('control.batch.search') }}" method="GET">
         <div class="row">
+            <div class="input-field col s12 m12">
+                <select name="search_expedition">
+                    <option value="" selected>PENDENTES DE EXPEDIÇÃO</option>
+                    @isset($valuesExpedition)
+                        @foreach ($valuesExpedition as $value)
+                            <option value="{{$value->expedition}}">{{$value->expedition}}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
             <div class="input-field col s12 m5">
                 <div class="input-field col s12 m9">
                     <i class="material-icons prefix">description</i>
-                    <input minlength="5" id="icon_prefix" type="text" name="process" value="{{ $seachProcess ?? '' }}"
-                        required>
+                    <input minlength="5" id="icon_prefix" type="text" name="process" value="{{ $seachProcess ?? '' }}">
                     <label for="icon_prefix">PROCESSO</label>
                 </div>
                 <div class="input-field col s12 m3">
-                    <select name="type_search_process" required>
+                    <select name="type_search_process">
                         <option value="=" selected>IGUAL</option>
-                        <option value="like"
-                            @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>
-                            CONTENHA</option>
+                        <option value="like" @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>CONTENHA</option>
                     </select>
                 </div>
             </div>
@@ -33,12 +40,9 @@
                 <div class="input-field col s12 m3">
                     <select name="type_search_product" required>
                         <option value="like" selected>CONTENHA</option>
-                        <option value="="
-                            @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>
-                            IGUAL</option>
+                        <option value="=" @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>IGUAL</option>
                     </select>
                 </div>
-
             </div>
             <div class="input-field col s12 m2">
                 <button class="btn-floating waves-effect waves-light" type="submit">
@@ -140,8 +144,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td>
-                                        <p>Nenhum registro pendende de expedição...</p>
+                                    <td colspan="8">
+                                        <p>Nenhum registro, informe os filtros para pesquisar...</p>
                                     </td>
                                 </tr>
                             @endforelse

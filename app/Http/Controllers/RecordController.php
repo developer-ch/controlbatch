@@ -10,8 +10,9 @@ class RecordController extends Controller
     public function index()
     {
         $isFilter = false;
-        $records = Record::limit(20)->whereExpeditionOrExpedition(null, '')->orderByDesc('id')->get();
-        return view('records.index', compact('records', 'isFilter'));
+        $records = Record::limit(0)->whereExpeditionOrExpedition(null, '')->orderByDesc('id')->get();
+        $valuesExpedition = Record::where('expedition','<>','')->distinct()->get('expedition');
+        return view('records.index', compact('records', 'isFilter','valuesExpedition'));
     }
 
     public function filter($process, $product = null)
@@ -39,15 +40,19 @@ class RecordController extends Controller
         $valueProduct = $type_search_product  == 'like' ? '%' . $request->product_code . '%' : $request->product_code;
 
         $isFilter = true;
-        if ($request->product_code) {
-            $records = Record::whereExpeditionOrExpedition(null, '')->where('process', $type_search_process, $valueProcess)->where('product_code', $type_search_product, $valueProduct)->orderBy('process')->orderBy('product_code')->get();
-        } else
-            $records = Record::whereExpeditionOrExpedition(null, '')->where('process', $type_search_process, $valueProcess)->orderBy('process',)->orderBy('product_code')->get();
+        if ($request->process && $request->product_code) {
+            $records = Record::whereExpedition($request->search_expedition??'')->where('process', $type_search_process, $valueProcess)->where('product_code', $type_search_product, $valueProduct)->orderBy('process')->orderBy('product_code')->get();
+        } elseif ($request->process) {
+            $records = Record::whereExpedition($request->search_expedition??'')->where('process', $type_search_process, $valueProcess)->orderBy('process',)->orderBy('product_code')->get();
+        } else{
+            $records = Record::whereExpedition($request->search_expedition??'')->orderBy('process',)->orderBy('product_code')->get();
+        }
 
         $seachProcess = $request->process;
         $seachProduct = $request->product_code;
+        $searchExpedition = $request->search_expedition??'';
 
-        return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product'));
+        return view('records.index', compact('records', 'isFilter','searchExpedition', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product'));
     }
 
     public function moveSelectedToTarget(Request $request)
@@ -125,12 +130,16 @@ class RecordController extends Controller
         return redirect()->route('control.batch.index');
     }
 
-    public function print(Request $request)
+    public function print(Request $request,  $showForSeparation = true)
     {
         $recordsPrint = Record::find($request->items_selected);
         $groupProcess =  Record::select('process',Record::raw('SUM(net_weight) as total_net_weight'))->groupBy('process')->orderBy('process')->find($request->items_selected);
         $groupProcessProduct =  Record::select('process','product_code',Record::raw('SUM(net_weight) as total_net_weight'))->groupBy('process','product_code')->orderBy('process')->orderBy('product_code')->find($request->items_selected);
-        return view('records.print',compact('recordsPrint','groupProcess','groupProcessProduct'));
+        return view('records.print',compact('recordsPrint','groupProcess','groupProcessProduct','showForSeparation'));
 
+    }
+    public function printExpedition(Request $request)
+    {
+        return $this->print($request,false);
     }
 }

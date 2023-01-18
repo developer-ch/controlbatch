@@ -8,12 +8,17 @@
     @section('listing')
         <div class="col s12">
             <table>
-                <thead class="centered">
+                <thead>
                     <tr>
-                        <th>LOTE-PRODUTO</th>
-                        <th>ENDEREÇO</th>
-                        <th>#</th>
-                        <th>PESO LIQUIDO</th>
+                        <th>PROCESSO</th>
+                        <th>PRODUTO</th>
+                        @if ($showForSeparation)
+                            <th>#</th>
+                            <th>ENDEREÇO</th>
+                        @endif
+                        <th>LOTE_PRODUTO</th>
+                        <th>PESO_LIQ(KG)</th>
+                        <th>VOLUMES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,32 +29,44 @@
                     @foreach ($recordsPrint as $key => $record)
                         @if ($oldProcess != $record->process)
                             <tr>
-                                <td colspan="3"><b>Sub total  processo: {{ $record->process }}</b></td>
-                                <td>Total Processo</td>
+                                <td colspan="{{$showForSeparation?5:3}}"><b>{{ $record->process }} Total</b></td>
+                                <td>{{ number_format($groupProcess->firstWhere('process', $record->process)->total_net_weight, 3, ',', '.') }}
+                                </td>
+                                <td>{{ $recordsPrint->Where('process', $record->process)->count() }}</td>
                             </tr>
                             @php
                                 $oldProcess = $record->process;
                             @endphp
                         @endif
-                        
+
                         @if ($oldProcess != $record->process || $oldProduct != $record->product_code)
                             <tr>
-                                <td colspan="3"><b>Sub total  Produto: {{ $record->product_code . " - " . $record->product_description }}</b></td>
-                                <td>Total Produto</td>
+                                <td><b>{{ $record->process }}</b></td>
+                                <td colspan="{{$showForSeparation?4:2}}"><b>{{ $record->product_code . ' - ' . $record->product_description }}
+                                        Total</b></td>
+                                <td>{{ number_format($groupProcessProduct->Where('process', $record->process)->firstWhere('product_code', $record->product_code)->total_net_weight, 3, ',', '.') }}
+                                </td>
+                                <td>{{ $recordsPrint->Where('process', $record->process)->Where('product_code', $record->product_code)->count() }}
+                                </td>
                             </tr>
                             @php
                                 $oldProduct = $record->product_code;
                             @endphp
                         @endif
                         <tr>
-                            <td class="batch">{{ $record->batch }}</td>
-                            <td class="address">{{ $record->address }}</td>
-                            <td class="id"><span>{{ $record->id }}</span></td>
-                            <td><b>{{ $record->net_weight }}</b></td>
+                            <td><b>{{ $record->process }}</b></td>
+                            <td><b>{{ $record->product_code }}</b></td>
+                            @if ($showForSeparation)
+                                <td>{{ $record->id }}</td>
+                                <td>{{ $record->address }}</td>
+                            @endif
+                            <td>{{ $record->batch }}</td>
+                            <td><b>{{ number_format($record->net_weight, 3, ',', '.') }}</b></td>
+                            <td>1</td>
                         </tr>
                     @endforeach
 
-                    <h6>TOTAL GERAL: {{ $recordsPrint->count() }} Volumes</h6>
+                    <h6><b>TOTAL GERAL: {{number_format($recordsPrint->sum('net_weight'),3, ',', '.')}} Kg e {{ $recordsPrint->count() }} Volumes</b></h6>
                 </tbody>
             </table>
         </div>
