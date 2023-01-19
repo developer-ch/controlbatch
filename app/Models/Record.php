@@ -69,6 +69,6 @@ class Record extends Model
 
     public static function listExpedition()
     {
-        return self::where('expedition','<>','')->distinct()->get('expedition');
+        return self::orderByDesc('updated_at')->where('expedition','<>','')->distinct()->get(['expedition','updated_at']);
     }
 }
