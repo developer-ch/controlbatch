@@ -29,7 +29,7 @@
                     @foreach ($recordsPrint as $key => $record)
                         @if ($oldProcess != $record->process)
                             <tr>
-                                <td colspan="{{$showForSeparation?5:3}}"><b><b>{{ $record->process }} Total</b></b></td>
+                                <td colspan="{{ $showForSeparation ? 5 : 3 }}"><b><b>{{ $record->process }} Total</b></b></td>
                                 <td><b><b>{{ number_format($groupProcess->firstWhere('process', $record->process)->total_net_weight, 3, ',', '.') }}</b></b>
                                 </td>
                                 <td><b><b>{{ $recordsPrint->Where('process', $record->process)->count() }}</b></b></td>
@@ -42,8 +42,10 @@
                         @if ($oldProcess != $record->process || $oldProduct != $record->product_code)
                             <tr>
                                 <td><b><b>{{ $record->process }}</b></b></td>
-                                <td colspan="{{$showForSeparation?4:2}}"><b><b>{{ $record->product_code . ' - ' . $record->product_description }}
-                                        Total</b></b></td>
+                                <td colspan="{{ $showForSeparation ? 4 : 2 }}">
+                                    <b><b>{{ $record->product_code . ' - ' . $record->product_description }}
+                                            Total</b></b>
+                                </td>
                                 <td><b><b>{{ number_format($groupProcessProduct->Where('process', $record->process)->firstWhere('product_code', $record->product_code)->total_net_weight, 3, ',', '.') }}</b></b>
                                 </td>
                                 <td><b><b>{{ $recordsPrint->Where('process', $record->process)->Where('product_code', $record->product_code)->count() }}</b></b>
@@ -66,7 +68,8 @@
                         </tr>
                     @endforeach
 
-                    <h6><b>TOTAL GERAL: {{number_format($recordsPrint->sum('net_weight'),3, ',', '.')}} Kg e {{ $recordsPrint->count() }} Volumes</b></h6>
+                    <h6><b>TOTAL GERAL: {{ number_format($recordsPrint->sum('net_weight'), 3, ',', '.') }} Kg e
+                            {{ $recordsPrint->count() }} Volumes</b></h6>
                 </tbody>
             </table>
         </div>
@@ -74,5 +77,10 @@
 @endisset
 
 @push('scripts')
-    <script></script>
+    <script>
+            window.print()
+            setTimeout(function() {
+                window.history.back()
+            }, 2000)
+    </script>
 @endpush

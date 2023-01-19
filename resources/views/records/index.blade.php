@@ -20,9 +20,9 @@
                     <div class="input-field col s12 m5">
                         <div class="input-field col s12 m9">
                             <i class="material-icons prefix">description</i>
-                            <input minlength="5" id="icon_prefix" type="text" name="process"
+                            <input minlength="5" id="icon_prefix1" type="text" name="process"
                                 value="{{ $seachProcess ?? '' }}" required>
-                            <label for="icon_prefix">PROCESSO</label>
+                            <label for="icon_prefix1">PROCESSO</label>
                         </div>
                         <div class="input-field col s12 m3">
                             <select name="type_search_process">
@@ -35,9 +35,9 @@
                     <div class="input-field col s12 m5">
                         <div class="input-field col s12 m9">
                             <i class="material-icons prefix">description</i>
-                            <input minlength="2" id="icon_prefix" type="text" name="product_code"
+                            <input minlength="2" id="icon_prefix2" type="text" name="product_code"
                                 value="{{ $seachProduct ?? '' }}">
-                            <label for="icon_prefix">PRODUTO-CODE</label>
+                            <label for="icon_prefix2">PRODUTO-CODE</label>
                         </div>
                         <div class="input-field col s12 m3">
                             <select name="type_search_product" required>
