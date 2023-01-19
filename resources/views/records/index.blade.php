@@ -28,8 +28,7 @@
                             <select name="type_search_process">
                                 <option value="=" selected>IGUAL</option>
                                 <option value="like"
-                                    @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>
-                                    CONTENHA</option>
+                                    @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>CONTENHA</option>
                             </select>
                         </div>
                     </div>
@@ -44,8 +43,7 @@
                             <select name="type_search_product" required>
                                 <option value="like" selected>CONTENHA</option>
                                 <option value="="
-                                    @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>
-                                    IGUAL</option>
+                                    @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>IGUAL</option>
                             </select>
                         </div>
                     </div>
@@ -129,9 +127,8 @@
                         @isset($isFilter)
                             @if ($isFilter)
                                 <a id='btn-cler-filters' href={{ route('control.batch.index') }}
-                                    class="btn right yellow tooltipped" data-tooltip='CLICK: REMOVER FILTRO(S)' data-position="top">
-                                    <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge"
-                                        data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
+                                    class="btn right yellow tooltipped" data-tooltip='CLICK: Limpar filtro(s)' data-position="top">
+                                    <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge" data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
                             @endif
                         @endisset
                     </div>
@@ -148,10 +145,7 @@
                                 <th>PROCESSO</th>
                                 <th>LOTE-PRODUTO</th>
                                 <th>PESO LIQUIDO</th>
-                                @isset($searchExpedition)
-                                @else
-                                    <th>EDIÇÃO</th>
-                                @endisset
+                                <th>AÇÃO</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,9 +153,14 @@
                                 <tr>
                                     <td class="id">
                                         <label>
-                                            <input id="{{ $record->id }}" type="checkbox" class="filled-in"
-                                                name="items_selected[]" value="{{ $record->id }}"
-                                                @isset($searchExpedition) checked @else onchange="hideActions(true)" @endisset /><span>{{ $record->id }}</span>
+                                            @isset($searchExpedition)
+                                                <input type="hidden" name="items_selected[]"
+                                                    value="{{ $record->id }}" /><span>{{ $record->id }}</span>
+                                            @else
+                                                <input id="{{ $record->id }}" type="checkbox" class="filled-in"
+                                                    name="items_selected[]" value="{{ $record->id }}"
+                                                    onchange="hideActions(true)" /><span>{{ $record->id }}</span>
+                                            @endisset
                                         </label>
                                     </td>
                                     <td class="address">{{ $record->address }}</td>
@@ -176,21 +175,33 @@
                                     <td class="product_description">{{ $record->product_description }}</td>
                                     <td class="process">
                                         @isset($searchExpedition)
-                                           <b><b>{{ $record->process }}</b></b>
+                                            <b><b>{{ $record->process }}</b></b>
                                         @else
-                                            <a href="{{ route('control.batch.filters', ['process' => $record->process]) }}"><b><b>{{ $record->process }}</b></b></a>
+                                            <a
+                                                href="{{ route('control.batch.filters', ['process' => $record->process]) }}"><b><b>{{ $record->process }}</b></b></a>
                                         @endisset
                                     </td>
                                     <td class="batch">{{ $record->batch }}</td>
                                     <input class="net_weight" type="hidden" value="{{ $record->net_weight }}" />
-                                    <td><b>{{ $record->net_weight }}</b></td>
+                                    <td><b>{{ number_format($record->net_weight, 3, ',', '.') }}</b></td>
                                     @isset($searchExpedition)
+                                        <td>
+                                            <div class="col s12">
+                                                <div class="col s6 m6">
+                                                    <a href="{{route('control.batch.clean.expedition',$record->id)}}" class="right black waves-effect waves-light tooltipped"
+                                                        data-tooltip='CLICK: Voltar para PENDENTE DE EXPEDIÇÃO o registro {{ $record->id }}' data-position="left"
+                                                        id="{{ $record->id }}">
+                                                        <i class="material-icons">reply</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
                                     @else
                                         <td>
                                             <div class="col s12">
                                                 <div class="col s6 m6">
-                                                    <a href="#" class="open-modal-edit modal-trigger"
-                                                        data-tooltip='CLICK: Alterar o registro.' data-position="bottom"
+                                                    <a href="#" class="open-modal-edit modal-trigger tooltipped"
+                                                        data-tooltip='CLICK: Para alterar o registro {{ $record->id }}' data-position="left"
                                                         id="{{ $record->id }}">
                                                         <i class="material-icons">edit</i>
                                                     </a>
@@ -307,7 +318,7 @@
                     $('input#edit_product_description').val('{{ $item->product_description }}')
                     $('input#edit_process').val('{{ $item->process }}')
                     $('input#edit_batch').val('{{ $item->batch }}')
-                    $('input#edit_net_weight').val('{{ $item->net_weight }}')
+                    $('input#edit_net_weight').val('{{ number_format($item->net_weight, 3, ',', '') }}')
                     $('input#edit_address').val('{{ $item->address }}')
                     $('#edit').modal('open', true)
                 }

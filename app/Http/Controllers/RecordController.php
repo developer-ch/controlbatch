@@ -95,6 +95,12 @@ class RecordController extends Controller
         return back()->with('error', 'ERRO: Expedição não realizada, informe a CARGA.');
     }
 
+    public function cleanExpeditionItem(Record $record)
+    {
+        $record->update(["expedition" => '']);
+        return back()->with('success', 'SUCESSO: Expedição realizada!');
+    }
+
     public function deleteItemsSelected(Request $request)
     {
         $itemsSelected = $request->items_selected;

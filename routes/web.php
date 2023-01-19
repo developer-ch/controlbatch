@@ -20,6 +20,7 @@ Route::get('/',function(){
 });
 Route::put('movements',[RecordController::class,'moveSelectedToTarget'])->name('control.batch.movement');
 Route::put('expedition',[RecordController::class,'updateExpeditionItemsSelected'])->name('control.batch.expedition');
+Route::get('expedition/{record}',[RecordController::class,'cleanExpeditionItem'])->name('control.batch.clean.expedition');
 Route::delete('exclusion',[RecordController::class,'deleteItemsSelected'])->name('control.batch.exclusion');
 Route::get('search/{process}/{product?}', [RecordController::class,'filter'])->name('control.batch.filters'); 
 Route::get('search', [RecordController::class,'search'])->name('control.batch.search'); 

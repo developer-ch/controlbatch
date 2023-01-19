@@ -29,10 +29,10 @@
                     @foreach ($recordsPrint as $key => $record)
                         @if ($oldProcess != $record->process)
                             <tr>
-                                <td colspan="{{$showForSeparation?5:3}}"><b>{{ $record->process }} Total</b></td>
-                                <td>{{ number_format($groupProcess->firstWhere('process', $record->process)->total_net_weight, 3, ',', '.') }}
+                                <td colspan="{{$showForSeparation?5:3}}"><b><b>{{ $record->process }} Total</b></b></td>
+                                <td><b><b>{{ number_format($groupProcess->firstWhere('process', $record->process)->total_net_weight, 3, ',', '.') }}</b></b>
                                 </td>
-                                <td>{{ $recordsPrint->Where('process', $record->process)->count() }}</td>
+                                <td><b><b>{{ $recordsPrint->Where('process', $record->process)->count() }}</b></b></td>
                             </tr>
                             @php
                                 $oldProcess = $record->process;
@@ -41,12 +41,12 @@
 
                         @if ($oldProcess != $record->process || $oldProduct != $record->product_code)
                             <tr>
-                                <td><b>{{ $record->process }}</b></td>
-                                <td colspan="{{$showForSeparation?4:2}}"><b>{{ $record->product_code . ' - ' . $record->product_description }}
-                                        Total</b></td>
-                                <td>{{ number_format($groupProcessProduct->Where('process', $record->process)->firstWhere('product_code', $record->product_code)->total_net_weight, 3, ',', '.') }}
+                                <td><b><b>{{ $record->process }}</b></b></td>
+                                <td colspan="{{$showForSeparation?4:2}}"><b><b>{{ $record->product_code . ' - ' . $record->product_description }}
+                                        Total</b></b></td>
+                                <td><b><b>{{ number_format($groupProcessProduct->Where('process', $record->process)->firstWhere('product_code', $record->product_code)->total_net_weight, 3, ',', '.') }}</b></b>
                                 </td>
-                                <td>{{ $recordsPrint->Where('process', $record->process)->Where('product_code', $record->product_code)->count() }}
+                                <td><b><b>{{ $recordsPrint->Where('process', $record->process)->Where('product_code', $record->product_code)->count() }}</b></b>
                                 </td>
                             </tr>
                             @php
@@ -61,7 +61,7 @@
                                 <td>{{ $record->address }}</td>
                             @endif
                             <td>{{ $record->batch }}</td>
-                            <td><b>{{ number_format($record->net_weight, 3, ',', '.') }}</b></td>
+                            <td>{{ number_format($record->net_weight, 3, ',', '.') }}</td>
                             <td>1</td>
                         </tr>
                     @endforeach
