@@ -28,7 +28,8 @@
                             <select name="type_search_process">
                                 <option value="=" selected>IGUAL</option>
                                 <option value="like"
-                                    @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>CONTENHA</option>
+                                    @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>
+                                    CONTENHA</option>
                             </select>
                         </div>
                     </div>
@@ -80,7 +81,6 @@
     </div>
 @endsection
 @include('records.modals.create')
-
 @include('records.modals.edit')
 @isset($records)
     @section('listing')
@@ -148,7 +148,10 @@
                                 <th>PROCESSO</th>
                                 <th>LOTE-PRODUTO</th>
                                 <th>PESO LIQUIDO</th>
-                                <th>EDIÇÃO</th>
+                                @isset($searchExpedition)
+                                @else
+                                    <th>EDIÇÃO</th>
+                                @endisset
                             </tr>
                         </thead>
                         <tbody>
@@ -162,27 +165,39 @@
                                         </label>
                                     </td>
                                     <td class="address">{{ $record->address }}</td>
-                                    <td class="product_code"><a
-                                            href="{{ route('control.batch.filters', ['process' => $record->process, 'product' => $record->product_code]) }}"><b>{{ $record->product_code }}</b></a>
+                                    <td class="product_code">
+                                        @isset($searchExpedition)
+                                            <b>{{ $record->product_code }}</b>
+                                        @else
+                                            <a
+                                                href="{{ route('control.batch.filters', ['process' => $record->process, 'product' => $record->product_code]) }}"><b>{{ $record->product_code }}</b></a>
+                                        @endisset
                                     </td>
                                     <td class="product_description">{{ $record->product_description }}</td>
-                                    <td class="process"><a
-                                            href="{{ route('control.batch.filters', ['process' => $record->process]) }}"><b><b>{{ $record->process }}</b></b></a>
+                                    <td class="process">
+                                        @isset($searchExpedition)
+                                           <b><b>{{ $record->process }}</b></b>
+                                        @else
+                                            <a href="{{ route('control.batch.filters', ['process' => $record->process]) }}"><b><b>{{ $record->process }}</b></b></a>
+                                        @endisset
                                     </td>
                                     <td class="batch">{{ $record->batch }}</td>
                                     <input class="net_weight" type="hidden" value="{{ $record->net_weight }}" />
                                     <td><b>{{ $record->net_weight }}</b></td>
-                                    <td>
-                                        <div class="col s12">
-                                            <div class="col s6 m6">
-                                                <a href="#" class="open-modal-edit modal-trigger"
-                                                    data-tooltip='CLICK: Alterar o registro.' data-position="bottom"
-                                                    id="{{ $record->id }}">
-                                                    <i class="material-icons">edit</i>
-                                                </a>
+                                    @isset($searchExpedition)
+                                    @else
+                                        <td>
+                                            <div class="col s12">
+                                                <div class="col s6 m6">
+                                                    <a href="#" class="open-modal-edit modal-trigger"
+                                                        data-tooltip='CLICK: Alterar o registro.' data-position="bottom"
+                                                        id="{{ $record->id }}">
+                                                        <i class="material-icons">edit</i>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
+                                    @endisset
                                 </tr>
                             @empty
                                 <tr>
