@@ -14,8 +14,12 @@ class RecordController extends Controller
         return view('records.index', compact('records', 'valuesExpedition'));
     }
 
-    public function filter($process, $product = null)
+    public function filter(Request $request)
     {
+        $product_description = $request->description;
+        $product = $request->product;
+        $process = $request->process;
+
         $isFilter = true;
         if ($product) {
             $records = Record::whereExpeditionAndProcessAndProductCode('', $process, $product)->orderByDesc('id')->orderBy('process')->orderBy('product_code')->get();
@@ -27,7 +31,7 @@ class RecordController extends Controller
         $seachProduct = $product;
         if ($records->count() == 0)
             return view('records.index', compact('records', 'seachProcess', 'seachProduct'));
-        return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct'));
+        return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct','product_description'));
     }
 
     public function search(Request $request)
@@ -120,7 +124,7 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         Record::create($request->all());
-        return redirect()->route('control.batch.filters', ['process' => $request->process, 'product' => $request->product_code])->with('success', 'Cadastrado com sucesso!');
+        return redirect()->route('control.batch.filters', ['process' => $request->process, 'product' => $request->product_code]+['description' => $request->product_description])->with('success', 'Cadastrado com sucesso!');
     }
 
     public function show(Record $record)

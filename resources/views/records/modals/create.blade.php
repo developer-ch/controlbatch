@@ -1,6 +1,6 @@
 <!-- Modal Structure -->
 <div id="create" class="modal modal-fixed-footer">
-    <form action="{{ route('control.batch.store')}}" method="POST">
+    <form action="{{ route('control.batch.store')}}" method="POST" autocomplete="off">
         @csrf
         <div class="modal-content">
             <h4>Lançamento</h4>
@@ -8,23 +8,18 @@
             <div class="row">
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
-                    @if (old('product_code'))
-                        <input id="icon_prefix" type="text" name="product_code" value="{{ old('product_code') }}"
-                            required>
-                    @else
-                        <input id="icon_prefix" type="text" name="product_code" autofocus="autofocus" required>
-                    @endif
+                    <input id="icon_prefix" type="text" name="product_code" autofocus="autofocus" value="{{ $seachProduct??'' }}" required>
                     <label for="icon_prefix">PRODUTO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
                     <input id="icon_prefix" type="text" name="product_description"
-                        value="{{ old('product_description') }}" required>
+                        value="{{ $product_description??'' }}" required>
                     <label for="icon_prefix">DESCRICAO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
-                    <input id="icon_prefix" type="text" name="process" value="{{ old('process') }}" required>
+                    <input id="icon_prefix" type="text" name="process" value="{{ $seachProcess??'' }}" required>
                     <label for="icon_prefix">PROCESSO</label>
                 </div>
                 <div class="input-field col s12 m6">
@@ -39,7 +34,7 @@
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">location_searching</i>
-                    <input id="icon_prefix" type="text" name="address" value="{{ old('address') }}" required>
+                    <input id="icon_prefix" type="text" name="address" value="" required>
                     <label for="icon_prefix">ENDEREÇO</label>
                 </div>
             </div>

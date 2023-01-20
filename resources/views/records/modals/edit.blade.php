@@ -1,6 +1,6 @@
 <!-- Modal Structure -->
 <div id="edit" class="modal modal-fixed-footer">
-    <form id="form_edit" method="POST">
+    <form id="form_edit" method="POST" autocomplete="off">
         @csrf
         @method('PUT')
         <div class="modal-content">
