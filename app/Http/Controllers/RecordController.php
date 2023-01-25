@@ -11,7 +11,9 @@ class RecordController extends Controller
     {
         $records = Record::limit(0)->whereExpeditionOrExpedition(null, '')->orderByDesc('id')->get();
         $valuesExpedition = Record::listExpedition();
-        return view('records.index', compact('records', 'valuesExpedition'));
+        $valuesSelectProcess = Record::listProcessNotExpedition();
+        $valuesSelectProducts = Record::listProductNotExpedition();
+        return view('records.index', compact('records', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts'));
     }
 
     public function filter(Request $request)
@@ -26,29 +28,26 @@ class RecordController extends Controller
         } else
             $records = Record::whereExpeditionOrExpeditionAndProcess(null, '', $process)->orderByDesc('id')->orderBy('process')->orderBy('product_code')->get();
 
-
+        $valuesExpedition = Record::listExpedition();
+        $valuesSelectProcess = Record::listProcessNotExpedition();
+        $valuesSelectProducts = Record::listProductNotExpedition($valueProcess ?? '');
         $seachProcess = $process;
         $seachProduct = $product;
-        if ($records->count() == 0)
-            return view('records.index', compact('records', 'seachProcess', 'seachProduct'));
-        return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct','product_description'));
+        return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesSelectProcess', 'valuesSelectProducts'));
     }
 
     public function search(Request $request)
     {
-        $type_search_process = $request->type_search_process;
-
-        $valueProcess = $type_search_process == 'like' ? '%' . $request->process . '%' : $request->process;
-
-        $type_search_product = $request->type_search_product;
-
-        $valueProduct = $type_search_product  == 'like' ? '%' . $request->product_code . '%' : $request->product_code;
+        $valueProcess = $request->process;
+        $valueProduct = $request->product_code;
 
         $isFilter = true;
-        if ($request->process && $request->product_code) {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->where('process', $type_search_process, $valueProcess)->where('product_code', $type_search_product, $valueProduct)->orderBy('process')->orderBy('product_code')->get();
-        } elseif ($request->process) {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->where('process', $type_search_process, $valueProcess)->orderBy('process',)->orderBy('product_code')->get();
+        if ($valueProcess && $valueProduct) {
+            $records = Record::whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
+        } elseif ($valueProcess) {
+            $records = Record::whereExpedition($request->search_expedition ?? '')->whereProcess($valueProcess)->orderBy('process')->orderBy('product_code')->get();
+        } elseif ($valueProduct) {
+            $records = Record::whereExpedition($request->search_expedition ?? '')->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
         } else {
             $records = Record::whereExpedition($request->search_expedition ?? '')->orderBy('process',)->orderBy('product_code')->get();
         }
@@ -57,14 +56,13 @@ class RecordController extends Controller
         $seachProduct = $request->product_code;
         $searchExpedition = $request->search_expedition ?? '';
         $valuesExpedition = Record::listExpedition();
-        if ($records->count() != 0) {
-            if ($searchExpedition == '')
-                return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product', 'valuesExpedition'));
-            return view('records.index', compact('records', 'isFilter', 'searchExpedition', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product', 'valuesExpedition'));
-        }
+        $valuesSelectProcess = Record::listProcessNotExpedition();
+        $valuesSelectProducts = Record::listProductNotExpedition($valueProcess ?? '');
+
+
         if ($searchExpedition == '')
-            return view('records.index', compact('records', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product', 'valuesExpedition'));
-        return view('records.index', compact('records', 'searchExpedition', 'seachProcess', 'seachProduct', 'type_search_process', 'type_search_product', 'valuesExpedition'));
+            return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts'));
+        return view('records.index', compact('records', 'isFilter', 'searchExpedition', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts'));
     }
 
     public function moveSelectedToTarget(Request $request)
@@ -124,7 +122,7 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         Record::create($request->all());
-        return redirect()->route('control.batch.filters', ['process' => $request->process, 'product' => $request->product_code]+['description' => $request->product_description])->with('success', 'Cadastrado com sucesso!');
+        return redirect()->route('control.batch.filters', ['process' => $request->process, 'product' => $request->product_code] + ['description' => $request->product_description])->with('success', 'Cadastrado com sucesso!');
     }
 
     public function show(Record $record)

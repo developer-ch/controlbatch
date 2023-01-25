@@ -69,6 +69,19 @@ class Record extends Model
 
     public static function listExpedition()
     {
-        return self::orderByDesc('updated_at')->where('expedition','<>','')->distinct()->get(['expedition','updated_at']);
+        return self::where('expedition','<>','')->orderByDesc('updated_at')->get(['expedition'])->unique('expedition');
+    }
+
+    public static function listProcessNotExpedition()
+    {
+        return self::where('expedition','')->orderBy('process')->get(['process'])->unique('process');
+    }
+
+    public static function listProductNotExpedition(string $process = "")
+    {
+        if($process)
+            return self::where('expedition','')->whereProcess($process)->orderBy('product_code')->get(['product_code'])->unique('product_code');
+        return self::where('expedition','')->orderBy('product_code')->get(['product_code'])->unique('product_code');
+        
     }
 }

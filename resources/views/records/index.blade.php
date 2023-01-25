@@ -19,31 +19,26 @@
                 <div class="row">
                     <div class="input-field col s12 m5">
                         <div class="input-field col s12 m9">
-                            <i class="material-icons prefix">description</i>
-                            <input minlength="5" id="icon_prefix1" type="text" name="process"
-                                value="{{ $seachProcess ?? '' }}" required>
-                            <label for="icon_prefix1">PROCESSO</label>
-                        </div>
-                        <div class="input-field col s12 m3">
-                            <select name="type_search_process">
-                                <option value="=" selected>IGUAL</option>
-                                <option value="like"
-                                    @isset($type_search_process) {{ $type_search_process == 'like' ? 'selected' : '' }}@endisset>CONTENHA</option>
+                            <select class="select2 browser-default" name="process">
+                                @isset($valuesSelectProcess)
+                                <option value="" selected disabled>PROCESSO</option>
+                                    @foreach ($valuesSelectProcess as $value)
+                                        <option value="{{ $value->process }}" @isset($seachProcess){{  $seachProcess == $value->process ? 'selected' : '' }}@endisset>{{ $value->process }}</option>
+                                    @endforeach
+                                @endisset
                             </select>
                         </div>
                     </div>
                     <div class="input-field col s12 m5">
                         <div class="input-field col s12 m9">
-                            <i class="material-icons prefix">description</i>
-                            <input minlength="2" id="icon_prefix2" type="text" name="product_code"
-                                value="{{ $seachProduct ?? '' }}">
-                            <label for="icon_prefix2">PRODUTO-CODE</label>
-                        </div>
-                        <div class="input-field col s12 m3">
-                            <select name="type_search_product" required>
-                                <option value="like" selected>CONTENHA</option>
-                                <option value="="
-                                    @isset($type_search_product) {{ $type_search_product == '=' ? 'selected' : '' }}@endisset>IGUAL</option>
+                            <select class="select2 browser-default" name="product_code">
+                                @isset($valuesSelectProducts)
+                                    <option value="" selected disabled>CÓDIGO DO PRODUTO</option>
+                                    @foreach ($valuesSelectProducts as $value)
+                                        <option value="{{ $value->product_code }}"
+                                            @isset($seachProduct){{  $seachProduct == $value->product_code ? 'selected' : '' }}@endisset>{{ $value->product_code }}</option>
+                                    @endforeach
+                                @endisset
                             </select>
                         </div>
                     </div>
@@ -59,11 +54,12 @@
             <form action="{{ route('control.batch.search') }}" method="GET">
                 <div class="row">
                     <div class="input-field col s12 m7">
-                        <select name="search_expedition">
+                        <select class="select2 browser-default" name="search_expedition">
                             @isset($valuesExpedition)
                                 @foreach ($valuesExpedition as $value)
                                     <option value="{{ $value->expedition }}"
-                                        @isset($searchExpedition){{ $searchExpedition == $value->expedition ? 'selected' : '' }}@endisset>{{ $value->expedition }}</option>
+                                        @isset($searchExpedition){{ $searchExpedition == $value->expedition ? 'selected' : '' }}@endisset>
+                                        {{ $value->expedition }}</option>
                                 @endforeach
                             @endisset
                         </select>
@@ -128,7 +124,8 @@
                             @if ($isFilter)
                                 <a id='btn-cler-filters' href={{ route('control.batch.index') }}
                                     class="btn right yellow tooltipped" data-tooltip='CLICK: Limpar filtro(s)' data-position="top">
-                                    <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge" data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
+                                    <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge"
+                                        data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
                             @endif
                         @endisset
                     </div>
@@ -188,9 +185,10 @@
                                         <td>
                                             <div class="col s12">
                                                 <div class="col s6 m6">
-                                                    <a href="{{route('control.batch.clean.expedition',$record->id)}}" class="right black waves-effect waves-light tooltipped"
-                                                        data-tooltip='CLICK: Voltar para PENDENTE DE EXPEDIÇÃO o registro {{ $record->id }}' data-position="left"
-                                                        id="{{ $record->id }}">
+                                                    <a href="{{ route('control.batch.clean.expedition', $record->id) }}"
+                                                        class="right black waves-effect waves-light tooltipped"
+                                                        data-tooltip='CLICK: Voltar para PENDENTE DE EXPEDIÇÃO o registro {{ $record->id }}'
+                                                        data-position="left" id="{{ $record->id }}">
                                                         <i class="material-icons">reply</i>
                                                     </a>
                                                 </div>
@@ -201,8 +199,8 @@
                                             <div class="col s12">
                                                 <div class="col s6 m6">
                                                     <a href="#" class="open-modal-edit modal-trigger tooltipped"
-                                                        data-tooltip='CLICK: Para alterar o registro {{ $record->id }}' data-position="left"
-                                                        id="{{ $record->id }}">
+                                                        data-tooltip='CLICK: Para alterar o registro {{ $record->id }}'
+                                                        data-position="left" id="{{ $record->id }}">
                                                         <i class="material-icons">edit</i>
                                                     </a>
                                                 </div>
@@ -275,7 +273,11 @@
             document.getElementById(el).style.display = 'block';
         }
 
-
+        // Basic Select2 select
+        $(".select2").select2({
+            dropdownAutoWidth: true,
+            width: '100%'
+        });
         const hideActions = (checkSelected = false) => {
             if (checkSelected) {
                 itensSelected = false;
@@ -308,21 +310,23 @@
             hideActions()
         };
         $('a.open-modal-edit').click((e) => {
-            console.log();
             const $id = e.currentTarget.id;
             @foreach ($records as $item)
                 if ({{ $item->id }} == $id) {
-                    $('form#form_edit').attr('action', "{{ route('control.batch.update', $item->id) }}")
+                    $('form#form_edit').attr('action',
+                        "{{ route('control.batch.update', $item->id) }}")
                     $('input#edit_id').val('{{ $item->id }}')
                     $('input#edit_product_code').val('{{ $item->product_code }}')
                     $('input#edit_product_description').val('{{ $item->product_description }}')
                     $('input#edit_process').val('{{ $item->process }}')
                     $('input#edit_batch').val('{{ $item->batch }}')
-                    $('input#edit_net_weight').val('{{ number_format($item->net_weight, 3, ',', '') }}')
+                    $('input#edit_net_weight').val(
+                        '{{ number_format($item->net_weight, 3, ',', '') }}')
                     $('input#edit_address').val('{{ $item->address }}')
                     $('#edit').modal('open', true)
                 }
             @endforeach
         })
+
     </script>
 @endpush
