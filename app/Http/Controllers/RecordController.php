@@ -42,9 +42,9 @@ class RecordController extends Controller
         $valueProduct = $request->product_code;
 
         $isFilter = true;
-        if ($valueProcess && $valueProduct) {
+        if ($valueProcess && $valueProcess !== "ALL" && $valueProduct) {
             $records = Record::whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
-        } elseif ($valueProcess) {
+        } elseif ($valueProcess && $valueProcess !== "ALL") {
             $records = Record::whereExpedition($request->search_expedition ?? '')->whereProcess($valueProcess)->orderBy('process')->orderBy('product_code')->get();
         } elseif ($valueProduct) {
             $records = Record::whereExpedition($request->search_expedition ?? '')->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
@@ -57,6 +57,7 @@ class RecordController extends Controller
         $searchExpedition = $request->search_expedition ?? '';
         $valuesExpedition = Record::listExpedition();
         $valuesSelectProcess = Record::listProcessNotExpedition();
+        $valueProcess = $valueProcess !== 'ALL'?$valueProcess:'';
         $valuesSelectProducts = Record::listProductNotExpedition($valueProcess ?? '');
 
 
