@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="input-field col s12 m5">
                         <div class="input-field col s12 m9">
-                            <select class="select2 browser-default" name="process">
+                            <select class="select2 browser-default" name="process" onchange="this.form.submit()">
                                 @isset($valuesSelectProcess)
                                 <option value="" selected disabled>PROCESSO</option>
                                     @foreach ($valuesSelectProcess as $value)
@@ -31,7 +31,7 @@
                     </div>
                     <div class="input-field col s12 m5">
                         <div class="input-field col s12 m9">
-                            <select class="select2 browser-default" name="product_code">
+                            <select class="select2 browser-default" name="product_code" onchange="this.form.submit()">
                                 @isset($valuesSelectProducts)
                                     <option value="" selected disabled>CÓDIGO DO PRODUTO</option>
                                     @foreach ($valuesSelectProducts as $value)
@@ -42,11 +42,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="input-field col s12 m2">
-                        <button class="btn-floating waves-effect waves-light" type="submit">
-                            <i class="material-icons left">search</i>
-                        </button>
-                    </div>
                 </div>
             </form>
         </div>
@@ -54,7 +49,7 @@
             <form action="{{ route('control.batch.search') }}" method="GET">
                 <div class="row">
                     <div class="input-field col s12 m7">
-                        <select class="select2 browser-default" name="search_expedition">
+                        <select class="select2 browser-default" name="search_expedition" onchange="this.form.submit()">
                             @isset($valuesExpedition)
                                 @foreach ($valuesExpedition as $value)
                                     <option value="{{ $value->expedition }}"
@@ -63,11 +58,6 @@
                                 @endforeach
                             @endisset
                         </select>
-                    </div>
-                    <div class="input-field col s12 m5">
-                        <button class="btn-floating waves-effect waves-light" type="submit">
-                            <i class="material-icons left">search</i>
-                        </button>
                     </div>
                 </div>
             </form>
