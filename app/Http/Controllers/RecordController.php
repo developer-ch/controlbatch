@@ -16,26 +16,6 @@ class RecordController extends Controller
         return view('records.index', compact('records', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts'));
     }
 
-    public function filter(Request $request)
-    {
-        $product_description = $request->description;
-        $product = $request->product;
-        $process = $request->process;
-
-        $isFilter = true;
-        if ($product) {
-            $records = Record::whereExpeditionAndProcessAndProductCode('', $process, $product)->orderByDesc('id')->orderBy('process')->orderBy('product_code')->get();
-        } else
-            $records = Record::whereExpeditionOrExpeditionAndProcess(null, '', $process)->orderByDesc('id')->orderBy('process')->orderBy('product_code')->get();
-
-        $valuesExpedition = Record::listExpedition();
-        $valuesSelectProcess = Record::listProcessNotExpedition();
-        $valuesSelectProducts = Record::listProductNotExpedition($valueProcess ?? '');
-        $seachProcess = $process;
-        $seachProduct = $product;
-        return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesSelectProcess', 'valuesSelectProducts'));
-    }
-
     public function search(Request $request)
     {
         $valueProcess = $request->process;
@@ -55,9 +35,11 @@ class RecordController extends Controller
         $seachProcess = $request->process;
         $seachProduct = $request->product_code;
         $searchExpedition = $request->search_expedition ?? '';
+
+    
         $valuesExpedition = Record::listExpedition();
         $valuesSelectProcess = Record::listProcessNotExpedition();
-        $valueProcess = $valueProcess !== 'ALL'?$valueProcess:'';
+        $valueProcess = $valueProcess !== 'ALL' ? $valueProcess : '';
         $valuesSelectProducts = Record::listProductNotExpedition($valueProcess ?? '');
 
 
@@ -123,7 +105,7 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         Record::create($request->all());
-        return redirect()->route('control.batch.filters', ['process' => $request->process, 'product' => $request->product_code] + ['description' => $request->product_description])->with('success', 'Cadastrado com sucesso!');
+        return redirect()->route('control.batch.search', ['process' => $request->process, 'product_code' => $request->product_code] + ['description' => $request->product_description])->with('success', 'Cadastrado com sucesso!');
     }
 
     public function show(Record $record)

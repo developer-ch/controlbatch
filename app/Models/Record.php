@@ -14,57 +14,37 @@ class Record extends Model
 
     public function address(): Attribute
     {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => $value
-        );
+        return Attribute::set(fn ($value) => strtoupper($value));
     }
 
     public function productCode(): Attribute
     {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => $value
-        );
+        return Attribute::set(fn ($value) => strtoupper($value));
     }
 
     public function productDescription(): Attribute
     {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => $value
-        );
+        return Attribute::set(fn ($value) => strtoupper($value));
     }
 
     public function process(): Attribute
     {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => $value
-        );
+        return Attribute::set(fn ($value) => strtoupper($value));
     }
 
     public function batch(): Attribute
     {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => $value
-        );
+        return Attribute::set(fn ($value) => strtoupper($value));
     }
 
     public function netWeight(): Attribute
     {
-        return Attribute::make(
-            set: fn ($value) => str_replace(',', '.', $value)
-        );
+        return Attribute::set(fn ($value) => str_replace(',', '.', $value));
     }
 
     public function expedition(): Attribute
     {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => $value
-        );
+        return Attribute::set(fn ($value) => strtoupper($value));
     }
 
     public static function listExpedition()

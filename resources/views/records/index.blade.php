@@ -21,11 +21,15 @@
                         <div class="input-field col s12 m9">
                             <select class="select2 browser-default" name="process" onchange="this.form.submit()">
                                 @isset($valuesSelectProcess)
-                                <option value="" selected disabled>INFORME O PROCESSO</option>
+                                    <option value="" selected disabled>INFORME O PROCESSO</option>
                                     @foreach ($valuesSelectProcess as $value)
-                                        <option value="{{ $value->process }}" @isset($seachProcess){{  $seachProcess == $value->process ? 'selected' : '' }}@endisset>{{ $value->process }}</option>
+                                        <option value="{{ $value->process }}"
+                                            @isset($seachProcess){{ $seachProcess == $value->process ? 'selected' : '' }}@endisset>
+                                            {{ $value->process }}</option>
                                     @endforeach
-                                    <option value="ALL"  @isset($seachProcess){{  $seachProcess == 'ALL' ? 'selected' : '' }}@endisset>TODOS</option>
+                                    <option value="ALL"
+                                        @isset($seachProcess){{ $seachProcess == 'ALL' ? 'selected' : '' }}@endisset>
+                                        TODOS</option>
                                 @endisset
                             </select>
                         </div>
@@ -37,7 +41,8 @@
                                     <option value="" selected disabled>SELECIONE O CÓDIGO DO PRODUTO</option>
                                     @foreach ($valuesSelectProducts as $value)
                                         <option value="{{ $value->product_code }}"
-                                            @isset($seachProduct){{  $seachProduct == $value->product_code ? 'selected' : '' }}@endisset>{{ $value->product_code }}</option>
+                                            @isset($seachProduct){{ $seachProduct == $value->product_code ? 'selected' : '' }}@endisset>
+                                            {{ $value->product_code }}</option>
                                     @endforeach
                                 @endisset
                             </select>
@@ -163,7 +168,7 @@
                                             <b>{{ $record->product_code }}</b>
                                         @else
                                             <a
-                                                href="{{ route('control.batch.filters', ['process' => $record->process, 'product' => $record->product_code]) }}"><b>{{ $record->product_code }}</b></a>
+                                                href="{{ route('control.batch.search', ['process' => $record->process, 'product_code' => $record->product_code]) }}"><b>{{ $record->product_code }}</b></a>
                                         @endisset
                                     </td>
                                     <td class="product_description">{{ $record->product_description }}</td>
@@ -172,7 +177,7 @@
                                             <b><b>{{ $record->process }}</b></b>
                                         @else
                                             <a
-                                                href="{{ route('control.batch.filters', ['process' => $record->process]) }}"><b><b>{{ $record->process }}</b></b></a>
+                                                href="{{ route('control.batch.search', ['process' => $record->process]) }}"><b><b>{{ $record->process }}</b></b></a>
                                         @endisset
                                     </td>
                                     <td class="batch">{{ $record->batch }}</td>
@@ -182,8 +187,8 @@
                                         <td>
                                             <div class="col s12">
                                                 <div class="col s6 m6">
-                                                    <a href="{{ route('control.batch.clean.expedition', $record->id) }}"
-                                                        class="right black waves-effect waves-light tooltipped"
+                                                    <a href="#confirmReply"
+                                                        class="right black waves-effect waves-light tooltipped modal-trigger"
                                                         data-tooltip='CLICK: Voltar para PENDENTE DE EXPEDIÇÃO o registro {{ $record->id }}'
                                                         data-position="left" id="{{ $record->id }}">
                                                         <i class="material-icons">reply</i>
@@ -253,6 +258,7 @@
                 </div>
             </div>
             @include('records.modals.delete')
+            @include('records.modals.confirm_reply')
         </form>
     @endsection
 @endisset
@@ -324,6 +330,5 @@
                 }
             @endforeach
         })
-
     </script>
 @endpush
