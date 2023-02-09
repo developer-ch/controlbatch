@@ -29,7 +29,7 @@
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">fitness_center</i>
-                    <input id="icon_prefix" type="text" name="net_weight" required>
+                    <input id="net_weight" type="text" name="net_weight" required>
                     <label for="icon_prefix">PESO LIQUIDO</label>
                 </div>
                 <div class="input-field col s12 m6">

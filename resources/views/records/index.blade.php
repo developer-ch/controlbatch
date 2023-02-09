@@ -330,5 +330,7 @@
                 }
             @endforeach
         })
+		
+		$('#net_weight,#edit_net_weight').mask('#.##0,000',{reverse: false});
     </script>
 @endpush

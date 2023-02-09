@@ -39,7 +39,7 @@ class Record extends Model
 
     public function netWeight(): Attribute
     {
-        return Attribute::set(fn ($value) => str_replace(',', '.', $value));
+        return Attribute::set(fn ($value) => str_replace(',', '.', str_replace('.', '', $value)));
     }
 
     public function expedition(): Attribute
