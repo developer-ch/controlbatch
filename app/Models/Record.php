@@ -14,27 +14,42 @@ class Record extends Model
 
     public function address(): Attribute
     {
-        return Attribute::set(fn ($value) => strtoupper($value));
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtoupper($value)
+        );
     }
 
     public function productCode(): Attribute
     {
-        return Attribute::set(fn ($value) => strtoupper($value));
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtoupper($value)
+        );
     }
 
     public function productDescription(): Attribute
     {
-        return Attribute::set(fn ($value) => strtoupper($value));
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtoupper($value)
+        );
     }
 
     public function process(): Attribute
     {
-        return Attribute::set(fn ($value) => strtoupper($value));
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtoupper($value)
+        );
     }
 
     public function batch(): Attribute
     {
-        return Attribute::set(fn ($value) => strtoupper($value));
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtoupper($value)
+        );
     }
 
     public function netWeight(): Attribute
@@ -44,24 +59,26 @@ class Record extends Model
 
     public function expedition(): Attribute
     {
-        return Attribute::set(fn ($value) => strtoupper($value));
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+            get: fn ($value) => strtoupper($value)
+        );
     }
 
     public static function listExpedition()
     {
-        return self::where('expedition','<>','')->orderByDesc('updated_at')->get(['expedition'])->unique('expedition');
+        return self::where('expedition', '<>', '')->orderByDesc('updated_at')->get(['expedition'])->unique('expedition');
     }
 
     public static function listProcessNotExpedition()
     {
-        return self::where('expedition','')->orderBy('process')->get(['process'])->unique('process');
+        return self::where('expedition', '')->orderBy('process')->get(['process'])->unique('process');
     }
 
     public static function listProductNotExpedition(string $process = "")
     {
-        if($process)
-            return self::where('expedition','')->whereProcess($process)->orderBy('product_code')->get(['product_code'])->unique('product_code');
-        return self::where('expedition','')->orderBy('product_code')->get(['product_code'])->unique('product_code');
-        
+        if ($process)
+            return self::where('expedition', '')->whereProcess($process)->orderBy('product_code')->get(['product_code'])->unique('product_code');
+        return self::where('expedition', '')->orderBy('product_code')->get(['product_code'])->unique('product_code');
     }
 }

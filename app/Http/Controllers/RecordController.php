@@ -29,7 +29,7 @@ class RecordController extends Controller
         } elseif ($valueProduct) {
             $records = Record::whereExpedition($request->search_expedition ?? '')->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
         } else {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->orderBy('process',)->orderBy('product_code')->get();
+            $records = Record::whereExpedition($request->search_expedition ?? '')->orderByDesc('id',)->get();
         }
 
         $seachProcess = $request->process;
