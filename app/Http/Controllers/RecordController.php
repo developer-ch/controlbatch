@@ -35,7 +35,7 @@ class RecordController extends Controller
         $seachProcess = $request->process;
         $seachProduct = $request->product_code;
         $searchExpedition = $request->search_expedition ?? '';
-
+        $openModalRegister = $request->openModalRegister ?? false;
     
         $valuesExpedition = Record::listExpedition();
         $valuesSelectProcess = Record::listProcessNotExpedition();
@@ -44,8 +44,8 @@ class RecordController extends Controller
 
 
         if ($searchExpedition == '')
-            return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts'));
-        return view('records.index', compact('records', 'isFilter', 'searchExpedition', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts'));
+            return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts','openModalRegister'));
+        return view('records.index', compact('records', 'isFilter', 'searchExpedition', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts','openModalRegister'));
     }
 
     public function moveSelectedToTarget(Request $request)
@@ -93,8 +93,7 @@ class RecordController extends Controller
         foreach ($itemsSelected as $item) {
             Record::find($item)->delete();
         }
-
-        return back()->with('success', 'Registro(s) excluido(s) com sucesso!');
+        return redirect()->route('control.batch.index')->with('success', 'Registro(s) excluido(s) com sucesso!');
     }
 
     public function create()
@@ -105,7 +104,7 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         Record::create($request->all());
-        return redirect()->route('control.batch.search', ['process' => $request->process, 'product_code' => $request->product_code] + ['description' => $request->product_description])->with('success', 'Cadastrado com sucesso!');
+        return redirect()->route('control.batch.search', ['process' => $request->process, 'product_code' => $request->product_code] + ['description' => $request->product_description] + ['openModalRegister' => true])->with('success', 'Cadastrado com sucesso!');
     }
 
     public function show(Record $record)

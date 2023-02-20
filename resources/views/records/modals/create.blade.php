@@ -8,34 +8,34 @@
             <div class="row">
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
-                    <input id="icon_prefix" type="text" name="product_code" autofocus="autofocus" value="{{ $seachProduct??'' }}" required>
-                    <label for="icon_prefix">PRODUTO</label>
+                    <input id="product_code" type="text" name="product_code" value="{{ $seachProduct??'' }}" required>
+                    <label for="product_code">PRODUTO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
-                    <input id="icon_prefix" type="text" name="product_description"
+                    <input id="product_description" type="text" name="product_description"
                         value="{{ $product_description??'' }}" required>
-                    <label for="icon_prefix">DESCRICAO</label>
+                    <label for="product_description">DESCRICAO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
-                    <input id="icon_prefix" type="text" name="process" value="{{ $seachProcess??'' }}" required>
-                    <label for="icon_prefix">PROCESSO</label>
+                    <input id="process" type="text" name="process" value="{{ $seachProcess??'' }}" required>
+                    <label for="process">PROCESSO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">description</i>
-                    <input id="icon_prefix" type="text" name="batch" autofocus="autofocus" required>
-                    <label for="icon_prefix">LOTE CLIENTE</label>
+                    <input id="batch" type="text" name="batch" autofocus="autofocus" required>
+                    <label for="batch">LOTE PRODUTO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">fitness_center</i>
                     <input id="net_weight" type="text" name="net_weight" required>
-                    <label for="icon_prefix">PESO LIQUIDO</label>
+                    <label for="net_weight">PESO LIQUIDO</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">location_searching</i>
-                    <input id="icon_prefix" type="text" name="address" value="" required>
-                    <label for="icon_prefix">ENDEREÇO</label>
+                    <input id="address" type="text" name="address" value="" required>
+                    <label for="address">ENDEREÇO</label>
                 </div>
             </div>
         </div>

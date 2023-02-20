@@ -330,7 +330,12 @@
                 }
             @endforeach
         })
-		
+
+        @if ($openModalRegister??false)
+            $('#create').modal('open', true);            
+            $('input#batch').focus()
+        @endif
+        
 		$('#net_weight,#edit_net_weight').mask('#.##0,000',{reverse: false});
     </script>
 @endpush
