@@ -21,7 +21,7 @@
                         <div class="input-field col s12 m9">
                             <select class="select2 browser-default" name="process" onchange="this.form.submit()">
                                 @isset($valuesSelectProcess)
-                                    <option value="" selected disabled>INFORME O PROCESSO</option>
+                                    <option value="" selected>INFORME O PROCESSO</option>
                                     @foreach ($valuesSelectProcess as $value)
                                         <option value="{{ $value->process }}"
                                             @isset($seachProcess){{ $seachProcess == $value->process ? 'selected' : '' }}@endisset>
@@ -38,7 +38,7 @@
                         <div class="input-field col s12 m9">
                             <select class="select2 browser-default" name="product_code" onchange="this.form.submit()">
                                 @isset($valuesSelectProducts)
-                                    <option value="" selected disabled>SELECIONE O CÓDIGO DO PRODUTO</option>
+                                    <option value="" selected>SELECIONE O CÓDIGO DO PRODUTO</option>
                                     @foreach ($valuesSelectProducts as $value)
                                         <option value="{{ $value->product_code }}"
                                             @isset($seachProduct){{ $seachProduct == $value->product_code ? 'selected' : '' }}@endisset>
