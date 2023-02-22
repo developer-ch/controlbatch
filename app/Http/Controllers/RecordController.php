@@ -20,6 +20,7 @@ class RecordController extends Controller
     {
         $valueProcess = $request->process;
         $valueProduct = $request->product_code;
+        $product_description = $request->description;
 
         $isFilter = true;
         if ($valueProcess && $valueProcess !== "ALL" && $valueProduct) {
@@ -44,8 +45,8 @@ class RecordController extends Controller
 
 
         if ($searchExpedition == '')
-            return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts','openModalRegister'));
-        return view('records.index', compact('records', 'isFilter', 'searchExpedition', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts','openModalRegister'));
+            return view('records.index', compact('records', 'isFilter', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts','openModalRegister','product_description'));
+        return view('records.index', compact('records', 'isFilter', 'searchExpedition', 'seachProcess', 'seachProduct', 'valuesExpedition', 'valuesSelectProcess', 'valuesSelectProducts','openModalRegister','product_description'));
     }
 
     public function moveSelectedToTarget(Request $request)

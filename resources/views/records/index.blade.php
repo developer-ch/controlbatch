@@ -90,7 +90,7 @@
                         @else
                             @isset($searchExpedition)
                             @else
-                                <label><input type="checkbox" id="select-all" class="filled-in"><span>MARCAR
+                                <label><input type="checkbox" id="select-all" class="filled-in"><span id="register_selected">MARCAR
                                         {{ $records->count() }}
                                         REGISTRO(S)</span></label>
                             @endisset
@@ -270,7 +270,7 @@
         let itensSelected = false;
         const blockElement = (el) => {
             document.getElementById(el).style.display = 'none';
-            checkbox.checked = false
+            checkbox.checked = false;
         }
         const unBlockElement = (el) => {
             document.getElementById(el).style.display = 'block';
@@ -296,6 +296,14 @@
                 unBlockElement('btn-expedition-selected')
                 unBlockElement('btn-print-selected')
                 unBlockElement('btn-delete-selected')
+                let qtdeItensSelected = 0;
+                lista = document.querySelectorAll("input");
+                for (var i = 1; i < lista.length; i++) {
+                    if (lista[i].checked) {
+                        qtdeItensSelected++;
+                        console.log(qtdeItensSelected);
+                    }
+                }
                 return
             }
             blockElement('btn-expedition-selected')
@@ -309,6 +317,7 @@
             itensSelected = checkbox.checked;
             for (var i = 0; i < lista.length; i++) {
                 lista[i].checked = checkbox.checked;
+
             }
             hideActions()
         };
@@ -331,11 +340,13 @@
             @endforeach
         })
 
-        @if ($openModalRegister??false)
-            $('#create').modal('open', true);            
+        @if ($openModalRegister ?? false)
+            $('#create').modal('open', true);
             $('input#batch').focus()
         @endif
-        
-		$('#net_weight,#edit_net_weight').mask('#.##0,000',{reverse: false});
+
+        $('#net_weight,#edit_net_weight').mask('#.##0,000', {
+            reverse: false
+        });
     </script>
 @endpush
