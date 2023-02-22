@@ -132,7 +132,7 @@ class RecordController extends Controller
 
     public function print(Request $request,  $showForSeparation = true)
     {
-        $recordsPrint = Record::find($request->items_selected);
+        $recordsPrint = Record::orderBy('process')->orderBy('product_code')->find($request->items_selected);
         $groupProcess =  Record::select('process', Record::raw('SUM(net_weight) as total_net_weight'))->groupBy('process')->orderBy('process')->find($request->items_selected);
         $groupProcessProduct =  Record::select('process', 'product_code', Record::raw('SUM(net_weight) as total_net_weight'))->groupBy('process', 'product_code')->orderBy('process')->orderBy('product_code')->find($request->items_selected);
         return view('records.print', compact('recordsPrint', 'groupProcess', 'groupProcessProduct', 'showForSeparation'));
