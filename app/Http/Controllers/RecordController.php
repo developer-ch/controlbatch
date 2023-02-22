@@ -21,16 +21,17 @@ class RecordController extends Controller
         $valueProcess = $request->process;
         $valueProduct = $request->product_code;
         $product_description = $request->description;
+        $limit = $request->limitRegister??1000;
 
         $isFilter = true;
         if ($valueProcess && $valueProcess !== "ALL" && $valueProduct) {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
+            $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
         } elseif ($valueProcess && $valueProcess !== "ALL") {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->whereProcess($valueProcess)->orderBy('process')->orderBy('product_code')->get();
+            $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->whereProcess($valueProcess)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
         } elseif ($valueProduct) {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->get();
+            $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
         } else {
-            $records = Record::whereExpedition($request->search_expedition ?? '')->orderByDesc('id',)->get();
+            $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->orderByDesc('id')->get();
         }
 
         $seachProcess = $request->process;
