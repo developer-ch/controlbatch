@@ -31,6 +31,8 @@ class RecordController extends Controller
             $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('product_code', $valueProduct)->where('address', $valueAddress)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
         } elseif ($valueProcess && $valueProcess !== "ALL" && $valueProduct) {
             $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('product_code', $valueProduct)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
+        } elseif ($valueProcess && $valueProcess !== "ALL" && $valueAddress) {
+            $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->where('process', $valueProcess)->where('address', $valueAddress)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
         } elseif ($valueProcess && $valueProcess !== "ALL") {
             $records = Record::limit($limit)->whereExpedition($request->search_expedition ?? '')->whereProcess($valueProcess)->orderBy('process')->orderBy('product_code')->orderByDesc('id')->get();
         } elseif ($valueProduct) {
