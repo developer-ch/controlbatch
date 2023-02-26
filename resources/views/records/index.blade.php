@@ -17,42 +17,53 @@
         <div id="pending" class="col s12">
             <form action="{{ route('control.batch.search') }}" method="GET">
                 <div class="row">
-                    <div class="input-field col s12 m5">
-                        <div class="input-field col s12 m9">
-                            <select class="select2 browser-default" name="process" onchange="this.form.submit()">
-                                @isset($valuesSelectProcess)
-                                    <option value="" selected disabled>INFORME O PROCESSO</option>
-                                    @foreach ($valuesSelectProcess as $value)
-                                        <option value="{{ $value->process }}"
-                                            @isset($seachProcess){{ $seachProcess == $value->process ? 'selected' : '' }}@endisset>
-                                            {{ $value->process }}</option>
-                                    @endforeach
-                                    <option value="ALL"
-                                        @isset($seachProcess){{ $seachProcess == 'ALL' ? 'selected' : '' }}@endisset>
-                                        TODOS</option>
-                                @endisset
-                            </select>
-                        </div>
+                    <div class="input-field col s12 m3">
+                        <select class="select2 browser-default" name="process" onchange="this.form.submit()">
+                            @isset($valuesSelectProcess)
+                                <option value="" selected disabled>INFORME O PROCESSO</option>
+                                @foreach ($valuesSelectProcess as $value)
+                                    <option value="{{ $value->process }}"
+                                        @isset($seachProcess){{ $seachProcess == $value->process ? 'selected' : '' }}@endisset>
+                                        {{ $value->process }}</option>
+                                @endforeach
+                                <option value="ALL"
+                                    @isset($seachProcess){{ $seachProcess == 'ALL' ? 'selected' : '' }}@endisset>
+                                    TODOS</option>
+                            @endisset
+                        </select>
                     </div>
-                    <div class="input-field col s12 m5">
-                        <div class="input-field col s12 m9">
-                            <select class="select2 browser-default" name="product_code" onchange="this.form.submit()">
-                                @isset($valuesSelectProducts)
-                                    <option value="" selected>SELECIONE O CÓDIGO DO PRODUTO</option>
-                                    @foreach ($valuesSelectProducts as $value)
-                                        <option value="{{ $value->product_code }}"
-                                            @isset($seachProduct){{ $seachProduct == $value->product_code ? 'selected' : '' }}@endisset>
-                                            {{ $value->product_code }}</option>
-                                    @endforeach
-                                @endisset
-                            </select>
-                        </div>
+                    <div class="input-field col s12 m3">
+                        <select class="select2 browser-default" name="product_code" onchange="this.form.submit()">
+                            @isset($valuesSelectProducts)
+                                <option value="" selected>SELECIONE O CÓDIGO DO PRODUTO</option>
+                                @foreach ($valuesSelectProducts as $value)
+                                    <option value="{{ $value->product_code }}"
+                                        @isset($seachProduct){{ $seachProduct == $value->product_code ? 'selected' : '' }}@endisset>
+                                        {{ $value->product_code }}</option>
+                                @endforeach
+                            @endisset
+                        </select>
                     </div>
-                    <div class="input-field col s12 m2">
-                        <button class="btn-floating waves-effect waves-light" type="submit">
-                            <i class="material-icons left">search</i>
-                        </button>
+                    <div class="input-field col s12 m3">
+                        <select class="select2 browser-default" name="address" onchange="this.form.submit()">
+                            @isset($valuesSelectAddresses)
+                                <option value="" selected>SELECIONE O ENDEREÇO</option>
+                                @foreach ($valuesSelectAddresses as $value)
+                                    <option value="{{ $value->address }}"
+                                        @isset($seachAddress){{ $seachAddress == $value->address ? 'selected' : '' }}@endisset>
+                                        {{ $value->address }}</option>
+                                @endforeach
+                            @endisset
+                        </select>
                     </div>
+                    @isset($isFilter)
+                        @if ($isFilter)
+                            <a id='btn-cler-filters' href={{ route('control.batch.index') }}
+                                class="btn yellow tooltipped" data-tooltip='CLICK: Limpar filtro(s)' data-position="top">
+                                <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge"
+                                    data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
+                        @endif
+                    @endisset
                 </div>
             </form>
         </div>
@@ -121,14 +132,6 @@
                                 formaction="{{ route('control.batch.print') }}" name="_method" value="GET" type="submit"><i
                                     class="material-icons left">print</i>
                             </button>
-                        @endisset
-                        @isset($isFilter)
-                            @if ($isFilter)
-                                <a id='btn-cler-filters' href={{ route('control.batch.index') }}
-                                    class="btn right yellow tooltipped" data-tooltip='CLICK: Limpar filtro(s)' data-position="top">
-                                    <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge"
-                                        data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
-                            @endif
                         @endisset
                     </div>
                 </div>

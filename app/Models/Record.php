@@ -81,4 +81,14 @@ class Record extends Model
             return self::where('expedition', '')->whereProcess($process)->orderBy('product_code')->get(['product_code'])->unique('product_code');
         return self::where('expedition', '')->orderBy('product_code')->get(['product_code'])->unique('product_code');
     }
+    public static function listAddressNotExpedition(string $process = "", string $product = "")
+    {
+        if ($process && $product)
+            return self::where('expedition', '')->whereProcess($process)->whereProductCode($product)->orderBy('address')->get(['address'])->unique('address');
+        if ($process)
+            return self::where('expedition', '')->whereProcess($process)->orderBy('address')->get(['address'])->unique('address');
+        if ($product)
+            return self::where('expedition', '')->whereProductCode($product)->orderBy('address')->get(['address'])->unique('address');
+        return self::where('expedition', '')->orderBy('address')->get(['address'])->unique('address');
+    }
 }
