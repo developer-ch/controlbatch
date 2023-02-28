@@ -225,7 +225,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row" id='#'>
+            <div class="row" id='option-movements'>
                 <div class="col S8 m3">
                     <select name="shipping_date">
                         <option value="" disabled selected>SELECIONE A CARGA</option>
@@ -284,10 +284,12 @@
 
         const optionsToActions = (show = false) => {
             if (show) {
+                showElement($('#option-movements'))
                 showElement($('#btn-expedition-selected'))
                 showElement($('#btn-print-selected'))
                 showElement($('#btn-delete-selected'))
             } else {
+                hideElement($('#option-movements'))
                 hideElement($('#btn-expedition-selected'))
                 hideElement($('#btn-print-selected'))
                 hideElement($('#btn-delete-selected'))
@@ -296,8 +298,10 @@
 
         const showQttyAndNetItemsSelected = (qtdeItemsSelected, qtdeTotalItems, qtdePesoLiq) => {
             $('#register_selected').html("Selecionado " + qtdeItemsSelected + " de " + qtdeTotalItems +
-                " Registro(s) Totalizando " + qtdePesoLiq + "Kg");
+                " Registro(s) Totalizando <b>" + qtdePesoLiq.toLocaleString('pt-BR') + "</b>Kg");
         }
+
+        optionsToActions();
 
         checkBoxSelectAll.on("click", () => {
             let checkBoxlist = $('input#select-one');
