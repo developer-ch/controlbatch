@@ -58,8 +58,8 @@
                     </div>
                     @isset($isFilter)
                         @if ($isFilter)
-                            <a id='btn-cler-filters' href={{ route('control.batch.index') }}
-                                class="btn yellow tooltipped" data-tooltip='CLICK: Limpar filtro(s)' data-position="top">
+                            <a id='btn-cler-filters' href={{ route('control.batch.index') }} class="btn yellow tooltipped"
+                                data-tooltip='CLICK: Limpar filtro(s)' data-position="top">
                                 <i class="material-icons blue-text text-darken-4">layers_clear</i> <span class="new badge"
                                     data-badge-caption="Registro(s)">{{ $records->count() }}</span></a>
                         @endif
@@ -159,9 +159,9 @@
                                                 <input type="hidden" name="items_selected[]"
                                                     value="{{ $record->id }}" /><span>{{ $record->id }}</span>
                                             @else
-                                                <input id="{{ $record->id }}" type="checkbox" class="filled-in"
-                                                    name="items_selected[]" value="{{ $record->id }}"
-                                                    onchange="hideActions(true)" /><span>{{ $record->id }}</span>
+                                                <input id="select-one" type="checkbox" class="filled-in" name="items_selected[]"
+                                                    value="{{ $record->id }}"
+                                                    onchange="optionsToActions(true)" /><span>{{ $record->id }}</span>
                                             @endisset
                                         </label>
                                     </td>
@@ -184,7 +184,8 @@
                                         @endisset
                                     </td>
                                     <td class="batch">{{ $record->batch }}</td>
-                                    <input class="net_weight" type="hidden" value="{{ $record->net_weight }}" />
+                                    <input id="net_weight{{ $record->id }}" type="hidden"
+                                        value="{{ $record->net_weight }}" />
                                     <td><b>{{ number_format($record->net_weight, 3, ',', '.') }}</b></td>
                                     @isset($searchExpedition)
                                         <td>
@@ -224,7 +225,7 @@
                     </table>
                 </div>
             </div>
-            <div class="row" id='btn-expedition-selected'>
+            <div class="row" id='#'>
                 <div class="col S8 m3">
                     <select name="shipping_date">
                         <option value="" disabled selected>SELECIONE A CARGA</option>
@@ -268,62 +269,69 @@
 
 @push('scripts')
     <script>
-        const checkbox = document.getElementById("select-all")
-        let lista = document.querySelectorAll("input");
-        let itensSelected = false;
-        const blockElement = (el) => {
-            document.getElementById(el).style.display = 'none';
-            checkbox.checked = false;
-        }
-        const unBlockElement = (el) => {
-            document.getElementById(el).style.display = 'block';
+        const checkBoxSelectAll = $('input#select-all')
+        const checkBoxSelectOne = $('input#select-one')
+        let qttyItensSelected = 0;
+        let netWeightItensSelected = 0;
+
+        const hideElement = (element) => {
+            element.hide();
         }
 
-        // Basic Select2 select
+        const showElement = (element) => {
+            element.show();
+        }
+
+        const optionsToActions = (show = false) => {
+            if (show) {
+                showElement($('#btn-expedition-selected'))
+                showElement($('#btn-print-selected'))
+                showElement($('#btn-delete-selected'))
+            } else {
+                hideElement($('#btn-expedition-selected'))
+                hideElement($('#btn-print-selected'))
+                hideElement($('#btn-delete-selected'))
+            }
+        }
+
+        const showQttyAndNetItemsSelected = (qtdeItemsSelected, qtdeTotalItems, qtdePesoLiq) => {
+            $('#register_selected').html("Selecionado " + qtdeItemsSelected + " de " + qtdeTotalItems +
+                " Registro(s) Totalizando " + qtdePesoLiq + "Kg");
+        }
+
+        checkBoxSelectAll.on("click", () => {
+            let checkBoxlist = $('input#select-one');
+            const selectAll = $(checkBoxSelectAll).is(':checked');
+            netWeightItensSelected = 0;
+            checkBoxlist.each((i, e) => {
+                e.checked = selectAll;
+                netWeightItensSelected += selectAll ? parseFloat($("input#net_weight" + e.value).val()) : 0;
+            });
+            const qttyTotalItems = checkBoxlist.length;
+            qttyItensSelected = selectAll ? qttyTotalItems : 0;
+            showQttyAndNetItemsSelected(qttyItensSelected, qttyTotalItems, netWeightItensSelected);
+            optionsToActions(selectAll);
+        });
+
+        checkBoxSelectOne.on("click", (e) => {
+            const qttyTotalItems = checkBoxSelectOne.length;
+            const netWeightSelected = parseFloat($("input#net_weight" + e.currentTarget.value).val());
+            if (e.currentTarget.checked) {
+                qttyItensSelected++;
+                netWeightItensSelected += netWeightSelected;
+            } else {
+                qttyItensSelected--;
+                netWeightItensSelected -= netWeightSelected;
+            }
+            optionsToActions();
+            showQttyAndNetItemsSelected(qttyItensSelected, qttyTotalItems, netWeightItensSelected);
+        });
+
         $(".select2").select2({
             dropdownAutoWidth: true,
             width: '100%'
         });
-        const hideActions = (checkSelected = false) => {
-            if (checkSelected) {
-                itensSelected = false;
-                lista = document.querySelectorAll("input");
-                for (var i = 1; i < lista.length; i++) {
-                    if (lista[i].checked) {
-                        itensSelected = true;
-                        i = lista.length;
-                    }
-                }
-            }
-            if (itensSelected) {
-                unBlockElement('btn-expedition-selected')
-                unBlockElement('btn-print-selected')
-                unBlockElement('btn-delete-selected')
-                let qtdeItensSelected = 0;
-                lista = document.querySelectorAll("input");
-                for (var i = 1; i < lista.length; i++) {
-                    if (lista[i].checked) {
-                        qtdeItensSelected++;
-                        console.log(qtdeItensSelected);
-                    }
-                }
-                return
-            }
-            blockElement('btn-expedition-selected')
-            blockElement('btn-print-selected')
-            blockElement('btn-delete-selected')
-        }
 
-        hideActions()
-        checkbox.onclick = () => {
-            lista = document.querySelectorAll("input");
-            itensSelected = checkbox.checked;
-            for (var i = 0; i < lista.length; i++) {
-                lista[i].checked = checkbox.checked;
-
-            }
-            hideActions()
-        };
         $('a.open-modal-edit').click((e) => {
             const $id = e.currentTarget.id;
             @foreach ($records as $item)
